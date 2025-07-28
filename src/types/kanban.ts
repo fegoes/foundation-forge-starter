@@ -71,3 +71,12 @@ export interface AcaoCard {
   cor: string
   ordem?: number
 }
+
+export interface KanbanBoard {
+  id: number
+  nome: string
+  descricao?: string
+  stages: Stage[]
+  createdAt: string
+  updatedAt: string
+}

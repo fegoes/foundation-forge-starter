@@ -32,10 +32,10 @@ const menuItems = [
     badge: null
   },
   {
-    title: "Kanban Comercial",
+    title: "Tarefas",
     url: "/kanban",
     icon: Kanban,
-    description: "Quadro de negociações",
+    description: "Quadros de negociações",
     badge: "3"
   },
   {
