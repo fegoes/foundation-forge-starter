@@ -20,7 +20,53 @@ interface Produto {
 
 const ProdutosIndex = () => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [produtos, setProdutos] = useLocalStorage<Produto[]>("produtos", [])
+  const [produtos, setProdutos] = useLocalStorage<Produto[]>("produtos", [
+    {
+      id: 1,
+      nome: "Sistema ERP Básico",
+      descricao: "Sistema completo para gestão empresarial básico",
+      valor: 299.90,
+      tipo: "Software",
+      status: "Ativo",
+      assinaturasAtivas: 15
+    },
+    {
+      id: 2,
+      nome: "Suporte Técnico Premium",
+      descricao: "Suporte técnico 24h com SLA de 4 horas",
+      valor: 150.00,
+      tipo: "Serviços",
+      status: "Ativo",
+      assinaturasAtivas: 23
+    },
+    {
+      id: 3,
+      nome: "Sistema ERP Avançado",
+      descricao: "Sistema completo para gestão empresarial com módulos avançados",
+      valor: 599.90,
+      tipo: "Software",
+      status: "Ativo",
+      assinaturasAtivas: 8
+    },
+    {
+      id: 4,
+      nome: "Licença Office 365",
+      descricao: "Licenças do Microsoft Office 365 Business Premium",
+      valor: 45.00,
+      tipo: "Licenças",
+      status: "Ativo",
+      assinaturasAtivas: 45
+    },
+    {
+      id: 5,
+      nome: "Consultoria Mensal",
+      descricao: "Consultoria mensal para otimização de processos",
+      valor: 800.00,
+      tipo: "Serviços",
+      status: "Pendente",
+      assinaturasAtivas: 3
+    }
+  ])
   const { toast } = useToast()
 
   const filteredProdutos = produtos.filter(produto =>

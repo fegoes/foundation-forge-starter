@@ -207,9 +207,9 @@ const KanbanIndex = () => {
       </div>
 
       {/* Kanban Board */}
-      <div className="grid gap-6 md:grid-cols-4 overflow-x-auto">
+      <div className="flex gap-4 overflow-x-auto pb-6 px-1">
         {stages.map((stage) => (
-          <div key={stage.id} className="min-w-80 md:min-w-0">
+          <div key={stage.id} className="flex-shrink-0 w-80 sm:w-96">
             <Card 
               className="h-fit"
               onDragOver={handleDragOver}
@@ -233,20 +233,20 @@ const KanbanIndex = () => {
                   R$ {calcularTotalStage(stage.cards).toFixed(2)}
                 </div>
               </CardHeader>
-              <CardContent className="space-y-3">
+              <CardContent className="space-y-3 min-h-32">
                 {stage.cards.map((card) => (
                   <Card 
                     key={card.id} 
-                    className="cursor-move hover:shadow-sm transition-shadow"
+                    className="cursor-move hover:shadow-md transition-all duration-200 border-l-4 border-l-primary/20"
                     draggable
                     onDragStart={(e) => handleDragStart(e, card)}
                   >
                     <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-sm">{card.cliente}</CardTitle>
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <CardTitle className="text-sm truncate">{card.cliente}</CardTitle>
                         </div>
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center gap-1 flex-shrink-0">
                           <EditarOportunidadeDialog
                             card={card}
                             stages={stages}
@@ -257,12 +257,12 @@ const KanbanIndex = () => {
                               </Button>
                             }
                           />
-                          <Badge variant={getStatusColor(card.status) as any} className="ml-1">
+                          <Badge variant={getStatusColor(card.status) as any} className="text-xs">
                             {card.status}
                           </Badge>
                         </div>
                       </div>
-                      <CardDescription className="text-xs mt-1">
+                      <CardDescription className="text-xs mt-1 line-clamp-2">
                         {card.descricao}
                       </CardDescription>
                     </CardHeader>
@@ -301,7 +301,7 @@ const KanbanIndex = () => {
                   trigger={
                     <Button 
                       variant="ghost" 
-                      className="w-full h-12 border-2 border-dashed border-border hover:border-primary"
+                      className="w-full h-12 border-2 border-dashed border-border hover:border-primary hover:bg-primary/5 transition-all duration-200"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Adicionar Card

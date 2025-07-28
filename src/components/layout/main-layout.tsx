@@ -1,6 +1,5 @@
 import { SidebarProvider } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
-import { Toaster } from "@/components/ui/toaster"
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -17,7 +16,6 @@ export function MainLayout({ children }: MainLayoutProps) {
           </div>
         </main>
       </div>
-      <Toaster />
     </SidebarProvider>
   )
 }

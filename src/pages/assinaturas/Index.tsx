@@ -30,7 +30,79 @@ interface Assinatura {
 
 const AssinaturasIndex = () => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [assinaturas, setAssinaturas] = useLocalStorage<Assinatura[]>("assinaturas", [])
+  const [assinaturas, setAssinaturas] = useLocalStorage<Assinatura[]>("assinaturas", [
+    {
+      id: 1,
+      clienteId: 1,
+      cliente: "Empresa ABC Ltda",
+      itens: [
+        {
+          produtoId: 1,
+          produto: "Sistema ERP Básico",
+          valor: 299.90,
+          dataVencimento: "2024-02-15",
+          status: "pago"
+        },
+        {
+          produtoId: 2,
+          produto: "Suporte Técnico Premium",
+          valor: 150.00,
+          dataVencimento: "2024-02-15",
+          status: "pago"
+        }
+      ],
+      valorTotal: 449.90,
+      periodicidade: "mensal",
+      status: "Ativa",
+      proximaCobranca: "2024-02-15",
+      inicioContrato: "2024-01-15"
+    },
+    {
+      id: 2,
+      clienteId: 2,
+      cliente: "Maria Santos",
+      itens: [
+        {
+          produtoId: 4,
+          produto: "Licença Office 365",
+          valor: 45.00,
+          dataVencimento: "2024-02-10",
+          status: "pendente"
+        }
+      ],
+      valorTotal: 45.00,
+      periodicidade: "mensal",
+      status: "Ativa",
+      proximaCobranca: "2024-02-10",
+      inicioContrato: "2024-01-10"
+    },
+    {
+      id: 3,
+      clienteId: 3,
+      cliente: "TechStart Soluções",
+      itens: [
+        {
+          produtoId: 3,
+          produto: "Sistema ERP Avançado",
+          valor: 599.90,
+          dataVencimento: "2024-02-20",
+          status: "cancelado"
+        },
+        {
+          produtoId: 5,
+          produto: "Consultoria Mensal",
+          valor: 800.00,
+          dataVencimento: "2024-02-20",
+          status: "pendente"
+        }
+      ],
+      valorTotal: 1399.90,
+      periodicidade: "mensal",
+      status: "Pendente",
+      proximaCobranca: "2024-02-20",
+      inicioContrato: "2024-01-20"
+    }
+  ])
   const [clientes, setClientes] = useLocalStorage<any[]>("clientes", [])
   const { toast } = useToast()
 

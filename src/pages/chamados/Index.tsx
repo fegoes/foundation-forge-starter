@@ -21,7 +21,63 @@ interface Chamado {
 
 const ChamadosIndex = () => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [chamados] = useLocalStorage<Chamado[]>("chamados", [])
+  const [chamados] = useLocalStorage<Chamado[]>("chamados", [
+    {
+      id: 1001,
+      titulo: "Sistema lento após atualização",
+      cliente: "Empresa ABC Ltda",
+      produto: "Sistema ERP Básico",
+      status: "Aberto",
+      prioridade: "Alta",
+      dataAbertura: "2024-01-20",
+      ultimaAtualizacao: "2024-01-20",
+      tecnicoResponsavel: "Carlos Silva"
+    },
+    {
+      id: 1002,
+      titulo: "Erro ao gerar relatórios",
+      cliente: "TechStart Soluções",
+      produto: "Sistema ERP Avançado",
+      status: "Em Andamento",
+      prioridade: "Média",
+      dataAbertura: "2024-01-19",
+      ultimaAtualizacao: "2024-01-21",
+      tecnicoResponsavel: "Ana Santos"
+    },
+    {
+      id: 1003,
+      titulo: "Configuração de email não funciona",
+      cliente: "Maria Santos",
+      produto: "Licença Office 365",
+      status: "Aguardando Cliente",
+      prioridade: "Baixa",
+      dataAbertura: "2024-01-18",
+      ultimaAtualizacao: "2024-01-19",
+      tecnicoResponsavel: "João Costa"
+    },
+    {
+      id: 1004,
+      titulo: "Backup automático falhando",
+      cliente: "Empresa ABC Ltda",
+      produto: "Sistema ERP Básico",
+      status: "Resolvido",
+      prioridade: "Alta",
+      dataAbertura: "2024-01-15",
+      ultimaAtualizacao: "2024-01-17",
+      tecnicoResponsavel: "Carlos Silva"
+    },
+    {
+      id: 1005,
+      titulo: "Solicitar nova funcionalidade",
+      cliente: "TechStart Soluções",
+      produto: "Sistema ERP Avançado",
+      status: "Em Andamento",
+      prioridade: "Média",
+      dataAbertura: "2024-01-22",
+      ultimaAtualizacao: "2024-01-23",
+      tecnicoResponsavel: "Ana Santos"
+    }
+  ])
 
   const filteredChamados = chamados.filter(chamado =>
     chamado.titulo.toLowerCase().includes(searchTerm.toLowerCase()) ||

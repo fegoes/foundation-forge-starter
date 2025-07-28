@@ -27,13 +27,14 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
-import { Edit, Plus, X } from "lucide-react"
+import { Edit, Plus, X, User, ShoppingCart } from "lucide-react"
 import { ClienteSelector } from "./ClienteSelector"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
+import { useToast } from "@/hooks/use-toast"
 
 const formSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -102,6 +103,7 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
   })
   
   const [produtos] = useLocalStorage<Produto[]>("produtos", [])
+  const { toast } = useToast()
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -158,6 +160,10 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
     })
     
     setOpen(false)
+    toast({
+      title: "Sucesso",
+      description: "Oportunidade atualizada com sucesso!"
+    })
   }
 
   const selectedStatus = statusOptions.find(option => option.value === form.watch("status"))
@@ -171,7 +177,7 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Editar Oportunidade</DialogTitle>
           <DialogDescription>
@@ -179,233 +185,272 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="cliente"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <ClienteSelector
-                      value={field.value}
-                      onValueChange={(clienteNome, clienteId) => {
-                        field.onChange(clienteNome)
-                        setSelectedClienteId(clienteId)
-                      }}
-                      placeholder="Selecione ou busque um cliente..."
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="descricao"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Descrição</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Descreva brevemente o que foi realizado..."
-                      className="min-h-[80px]"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="w-5 h-5 text-primary" />
+                  Informações Básicas
+                </CardTitle>
+                <CardDescription>Cliente e descrição da oportunidade</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="cliente"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cliente *</FormLabel>
+                      <FormControl>
+                        <ClienteSelector
+                          value={field.value}
+                          onValueChange={(clienteNome, clienteId) => {
+                            field.onChange(clienteNome)
+                            setSelectedClienteId(clienteId)
+                          }}
+                          placeholder="Selecione ou busque um cliente..."
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="descricao"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Descrição *</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Descreva brevemente o que foi realizado..."
+                          className="min-h-[80px]"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
-            {/* Serviços/Produtos */}
-            <div className="space-y-4">
-              <FormLabel>Produtos/Serviços</FormLabel>
-              
-              {servicos.length > 0 && (
-                <div className="space-y-2">
-                  {servicos.map((servico) => (
-                    <Card key={servico.id}>
-                      <CardContent className="p-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex-1">
-                            <p className="font-medium text-sm">{servico.produto}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {servico.quantidade}x R$ {servico.valor.toFixed(2)} = R$ {(servico.quantidade * servico.valor).toFixed(2)}
-                            </p>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ShoppingCart className="w-5 h-5 text-primary" />
+                  Produtos/Serviços
+                </CardTitle>
+                <CardDescription>Gerencie os produtos ou serviços desta oportunidade</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {servicos.length > 0 && (
+                  <div className="space-y-2">
+                    {servicos.map((servico) => (
+                      <Card key={servico.id} className="bg-muted/30">
+                        <CardContent className="p-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <p className="font-medium text-sm">{servico.produto}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {servico.quantidade}x R$ {servico.valor.toFixed(2)} = R$ {(servico.quantidade * servico.valor).toFixed(2)}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removerServico(servico.id)}
+                            >
+                              <X className="h-4 w-4" />
+                            </Button>
                           </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => removerServico(servico.id)}
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                  <div className="text-right">
-                    <p className="font-semibold text-success">
-                      Total: R$ {calcularValorTotal().toFixed(2)}
-                    </p>
+                        </CardContent>
+                      </Card>
+                    ))}
+                    <div className="text-right bg-muted p-3 rounded-lg">
+                      <p className="font-semibold text-success">
+                        Total: R$ {calcularValorTotal().toFixed(2)}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              <Card>
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm">Adicionar Produto/Serviço</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    <Select
-                      value={novoServico.produtoId.toString()}
-                      onValueChange={(value) => {
-                        const produto = produtos.find(p => p.id === parseInt(value))
-                        if (produto) {
-                          setNovoServico({
-                            ...novoServico,
-                            produtoId: produto.id,
-                            produto: produto.nome,
-                            valor: produto.valor
-                          })
-                        }
-                      }}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Produto" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {produtos.map((produto) => (
-                          <SelectItem key={produto.id} value={produto.id.toString()}>
-                            {produto.nome} - R$ {produto.valor.toFixed(2)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    
-                    <Input
-                      type="number"
-                      placeholder="Qtd"
-                      min="1"
-                      value={novoServico.quantidade}
-                      onChange={(e) => setNovoServico({
-                        ...novoServico,
-                        quantidade: parseInt(e.target.value) || 1
-                      })}
-                    />
-                    
-                    <Button
-                      type="button"
-                      onClick={adicionarServico}
-                      disabled={!novoServico.produtoId}
-                    >
-                      <Plus className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+                <Card className="bg-background border-dashed">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-sm">Adicionar Produto/Serviço</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="grid grid-cols-3 gap-2">
+                      <Select
+                        value={novoServico.produtoId.toString()}
+                        onValueChange={(value) => {
+                          const produto = produtos.find(p => p.id === parseInt(value))
+                          if (produto) {
+                            setNovoServico({
+                              ...novoServico,
+                              produtoId: produto.id,
+                              produto: produto.nome,
+                              valor: produto.valor
+                            })
+                          }
+                        }}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Produto" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {produtos.map((produto) => (
+                            <SelectItem key={produto.id} value={produto.id.toString()}>
+                              {produto.nome} - R$ {produto.valor.toFixed(2)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      
+                      <Input
+                        type="number"
+                        placeholder="Qtd"
+                        min="1"
+                        value={novoServico.quantidade}
+                        onChange={(e) => setNovoServico({
+                          ...novoServico,
+                          quantidade: parseInt(e.target.value) || 1
+                        })}
+                      />
+                      
+                      <Button
+                        type="button"
+                        onClick={adicionarServico}
+                        disabled={!novoServico.produtoId}
+                      >
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </CardContent>
+            </Card>
             
             {servicos.length === 0 && (
-              <FormField
-                control={form.control}
-                name="valor"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Valor Manual (R$)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        step="0.01"
-                        placeholder="0.00" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-sm">Valor Manual</CardTitle>
+                  <CardDescription>Se não há produtos cadastrados, informe o valor manualmente</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <FormField
+                    control={form.control}
+                    name="valor"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Valor (R$) *</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            step="0.01"
+                            placeholder="0.00" 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </CardContent>
+              </Card>
             )}
             
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="status"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {statusOptions.map((status) => (
-                          <SelectItem key={status.value} value={status.value}>
-                            <div className="flex items-center gap-2">
-                              <Badge variant={status.color as any} className="w-3 h-3 p-0" />
-                              {status.label}
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="estagio"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estágio</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Selecione o estágio" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {stages.map((stage) => (
-                          <SelectItem key={stage.id} value={stage.id.toString()}>
-                            <div className="flex items-center gap-2">
-                              <Badge variant={stage.cor as any}>
-                                {stage.nome}
-                              </Badge>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-sm">Status & Estágio</CardTitle>
+                <CardDescription>Configure o status atual da oportunidade</CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Status *</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {statusOptions.map((status) => (
+                            <SelectItem key={status.value} value={status.value}>
+                              <div className="flex items-center gap-2">
+                                <Badge variant={status.color as any} className="w-3 h-3 p-0" />
+                                {status.label}
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="estagio"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Estágio</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione o estágio" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {stages.map((stage) => (
+                            <SelectItem key={stage.id} value={stage.id.toString()}>
+                              <div className="flex items-center gap-2">
+                                <Badge variant={stage.cor as any}>
+                                  {stage.nome}
+                                </Badge>
+                              </div>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
             
             {selectedStatus && (
-              <div className="p-3 bg-muted rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium">Preview do Status:</span>
-                  <Badge variant={selectedStatus.color as any}>
-                    {selectedStatus.label}
-                  </Badge>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Este status será exibido no card da oportunidade.
-                </p>
-              </div>
+              <Card className="bg-muted/30">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-sm font-medium">Preview do Status:</span>
+                    <Badge variant={selectedStatus.color as any}>
+                      {selectedStatus.label}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Este status será exibido no card da oportunidade.
+                  </p>
+                </CardContent>
+              </Card>
             )}
             
-            <DialogFooter>
-              <Button type="submit">Salvar Alterações</Button>
-            </DialogFooter>
+            <div className="flex gap-2 justify-end">
+              <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+                Cancelar
+              </Button>
+              <Button type="submit">
+                Salvar Alterações
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>

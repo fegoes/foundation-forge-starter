@@ -29,7 +29,49 @@ interface Cliente {
 
 const ClientesIndex = () => {
   const [searchTerm, setSearchTerm] = useState("")
-  const [clientes, setClientes] = useLocalStorage<Cliente[]>("clientes", [])
+  const [clientes, setClientes] = useLocalStorage<Cliente[]>("clientes", [
+    {
+      id: 1,
+      nome: "Empresa ABC Ltda",
+      email: "contato@empresaabc.com",
+      telefone: "(11) 99999-9999",
+      status: "Ativo",
+      tipo: "juridica",
+      razaoSocial: "ABC Tecnologia Ltda",
+      cnpj: "12.345.678/0001-90",
+      nomeRepresentante: "João Silva",
+      emailRepresentante: "joao@empresaabc.com",
+      telefoneRepresentante: "(11) 98888-8888",
+      assinaturas: 3,
+      valorTotal: 2450.00
+    },
+    {
+      id: 2,
+      nome: "Maria Santos",
+      email: "maria.santos@email.com",
+      telefone: "(11) 97777-7777",
+      status: "Ativo",
+      tipo: "fisica",
+      cpf: "123.456.789-00",
+      assinaturas: 1,
+      valorTotal: 150.00
+    },
+    {
+      id: 3,
+      nome: "TechStart Soluções",
+      email: "admin@techstart.com",
+      telefone: "(11) 96666-6666",
+      status: "Pendente",
+      tipo: "juridica",
+      razaoSocial: "TechStart Soluções em TI Ltda",
+      cnpj: "98.765.432/0001-10",
+      nomeRepresentante: "Ana Costa",
+      emailRepresentante: "ana@techstart.com",
+      telefoneRepresentante: "(11) 95555-5555",
+      assinaturas: 2,
+      valorTotal: 890.00
+    }
+  ])
   const { toast } = useToast()
 
   const filteredClientes = clientes.filter(cliente =>
@@ -128,12 +170,12 @@ const ClientesIndex = () => {
                 <div className="flex gap-6">
                   <div>
                     <p className="text-sm text-muted-foreground">Assinaturas</p>
-                    <p className="text-lg font-semibold">{cliente.assinaturas}</p>
+                    <p className="text-lg font-semibold">{cliente.assinaturas || 0}</p>
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Valor Total/Mês</p>
                     <p className="text-lg font-semibold text-success">
-                      R$ {cliente.valorTotal.toFixed(2)}
+                      R$ {(cliente.valorTotal || 0).toFixed(2)}
                     </p>
                   </div>
                 </div>
