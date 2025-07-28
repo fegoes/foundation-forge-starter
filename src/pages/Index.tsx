@@ -4,7 +4,7 @@ import { RecentActivity } from "@/components/dashboard/RecentActivity"
 import { RevenueChart } from "@/components/dashboard/RevenueChart"
 import { AssinaturasChart } from "@/components/dashboard/AssinaturasChart"
 import { ChamadosChart } from "@/components/dashboard/ChamadosChart"
-import type { DashboardStats as DashboardStatsType, RevenueData, ChartData } from "@/types/dashboard"
+import type { DashboardStats as DashboardStatsType, RevenueData, ChartData, ChamadosData } from "@/types/dashboard"
 
 export default function Index() {
   // Mock data
@@ -43,16 +43,21 @@ export default function Index() {
     ]
   }
 
+  const chamadosData: ChamadosData[] = [
+    { status: "Abertos", quantidade: 23, fill: "hsl(var(--destructive))" },
+    { status: "Fechados", quantidade: 102, fill: "hsl(var(--primary))" }
+  ]
+
   return (
     <div className="space-y-6">
       <WelcomeCard />
       <DashboardStats stats={stats} />
       <div className="grid gap-6 md:grid-cols-2">
         <RevenueChart data={revenueData} />
-        <AssinaturasChart data={chartData} />
+        <AssinaturasChart data={[chartData]} />
       </div>
       <div className="grid gap-6 md:grid-cols-2">
-        <ChamadosChart data={chartData} />
+        <ChamadosChart data={chamadosData} />
         <RecentActivity />
       </div>
     </div>

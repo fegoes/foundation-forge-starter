@@ -80,6 +80,7 @@ export const CardDetailsDialog = ({
       id: Date.now(),
       autor: "Usuário Atual",
       texto: novoComentario,
+      createdAt: new Date().toISOString(),
       timestamp: new Date().toISOString(),
       tipo: 'comentario'
     }
@@ -91,6 +92,7 @@ export const CardDetailsDialog = ({
       id: Date.now() + 1,
       autor: "Sistema",
       texto: "adicionou um comentário",
+      createdAt: new Date().toISOString(),
       timestamp: new Date().toISOString(),
       tipo: 'atividade',
       icone: 'MessageSquare'
@@ -109,6 +111,7 @@ export const CardDetailsDialog = ({
       id: Date.now(),
       autor: "Usuário Atual",
       texto: textoResposta,
+      createdAt: new Date().toISOString(),
       timestamp: new Date().toISOString(),
       tipo: 'comentario'
     }
@@ -126,6 +129,7 @@ export const CardDetailsDialog = ({
       id: Date.now(),
       autor: "Sistema",
       texto,
+      createdAt: new Date().toISOString(),
       timestamp: new Date().toISOString(),
       tipo: 'atividade',
       icone
@@ -173,6 +177,7 @@ export const CardDetailsDialog = ({
 
     const novoServicoItem: ServicoItem = {
       id: Date.now(),
+      nome: produto.nome,
       produtoId: produto.id,
       produto: produto.nome,
       valor: produto.preco,

@@ -35,7 +35,7 @@ import { Edit, Plus, X, User, ShoppingCart } from "lucide-react"
 import { ClienteSelector } from "./ClienteSelector"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { useToast } from "@/hooks/use-toast"
-import type { AcaoCard } from "@/types/kanban"
+import type { AcaoCard, KanbanCard as GlobalKanbanCard, ServicoItem as GlobalServicoItem, Stage as GlobalStage } from "@/types/kanban"
 
 const formSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -55,35 +55,10 @@ interface Produto {
   status: string
 }
 
-interface ServicoItem {
-  id: number
-  produtoId: number
-  produto: string
-  valor: number
-  quantidade: number
-}
-
-interface KanbanCard {
-  id: number
-  cliente: string
-  descricao: string
-  valor: number
-  status: string
-  clienteId?: number
-  servicos?: ServicoItem[]
-  acaoId?: number
-}
-
-interface Stage {
-  id: number
-  nome: string
-  cor: string
-}
-
 interface EditarOportunidadeDialogProps {
-  card: KanbanCard
-  stages: Stage[]
-  onUpdate: (cardId: number, updatedCard: Partial<KanbanCard>) => void
+  card: GlobalKanbanCard
+  stages: GlobalStage[]
+  onUpdate: (cardId: number, updatedCard: Partial<GlobalKanbanCard>) => void
   trigger?: React.ReactNode
 }
 
@@ -96,8 +71,8 @@ const statusOptions = [
 
 export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: EditarOportunidadeDialogProps) {
   const [open, setOpen] = useState(false)
-  const [selectedClienteId, setSelectedClienteId] = useState<number | undefined>(card.clienteId)
-  const [servicos, setServicos] = useState<ServicoItem[]>(card.servicos || [])
+  const [selectedClienteId, setSelectedClienteId] = useState<number | undefined>(undefined)
+  const [servicos, setServicos] = useState<GlobalServicoItem[]>(card.servicos || [])
   const [novoServico, setNovoServico] = useState({
     produtoId: 0,
     produto: "",
@@ -131,8 +106,9 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
     const produto = produtos.find(p => p.id === novoServico.produtoId)
     if (!produto) return
 
-    const novoItem: ServicoItem = {
+    const novoItem: GlobalServicoItem = {
       id: Date.now(),
+      nome: produto.nome,
       produtoId: produto.id,
       produto: produto.nome,
       valor: produto.valor,
@@ -160,7 +136,6 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
       descricao: values.descricao,
       valor: valorTotal,
       status: values.status,
-      clienteId: selectedClienteId,
       servicos: servicos,
       acaoId: values.acao ? parseInt(values.acao) : undefined,
     })

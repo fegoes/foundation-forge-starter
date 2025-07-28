@@ -25,13 +25,14 @@ const initialStages: Stage[] = [
         descricao: "Implementação de sistema ERP",
         prioridade: "alta",
         tags: ["ERP", "Implementação"],
-        anexos: [],
+        anexos: 0,
         comentarios: [],
         atividades: [],
         servicos: [],
         stageId: 1,
         createdAt: "2024-01-10",
-        updatedAt: "2024-01-10"
+        updatedAt: "2024-01-10",
+        status: "quente"
       }
     ]
   },
@@ -66,7 +67,7 @@ export default function KanbanIndex() {
     const newCard: KanbanCard = {
       id: Date.now(),
       ...cardData,
-      anexos: [],
+      anexos: 0,
       comentarios: [],
       atividades: [],
       servicos: [],

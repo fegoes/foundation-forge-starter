@@ -48,17 +48,17 @@ export interface RevenueData {
 export interface StatCardData {
   title: string
   value: string | number
-  change: number
+  change: string
   icon: React.ComponentType<any>
-  variant?: 'default' | 'success' | 'warning' | 'danger'
+  variant?: 'default' | 'success' | 'warning' | 'destructive'
 }
 
 export interface StatsCardProps {
   title: string
   value: string | number
-  change: number | string
+  change: string
   icon: React.ComponentType<any>
-  variant?: 'default' | 'success' | 'warning' | 'danger' | 'destructive'
+  variant?: 'default' | 'success' | 'warning' | 'destructive'
 }
 
 export interface DashboardStatsProps {
@@ -69,10 +69,16 @@ export interface RevenueChartProps {
   data: RevenueData[]
 }
 
+export interface ChamadosData {
+  status: string
+  quantidade: number
+  fill: string
+}
+
 export interface AssinaturasChartProps {
-  data: ChartData
+  data: ChartData[]
 }
 
 export interface ChamadosChartProps {
-  data: ChartData
+  data: ChamadosData[]
 }

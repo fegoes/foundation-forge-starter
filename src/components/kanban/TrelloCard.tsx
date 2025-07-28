@@ -46,7 +46,7 @@ export const TrelloCard = ({ card, stages, onUpdate, onDragStart, onDelete }: Tr
 
   const acaoAtual = getAcaoCard(card.acaoId)
   const hasComentarios = (card.comentarios?.length || 0) > 0
-  const hasAnexos = (card.anexos || 0) > 0
+  const hasAnexos = typeof card.anexos === 'number' ? card.anexos > 0 : false
 
   return (
     <>
@@ -133,7 +133,7 @@ export const TrelloCard = ({ card, stages, onUpdate, onDragStart, onDelete }: Tr
               {hasAnexos && (
                 <div className="flex items-center space-x-1 text-gray-500">
                   <Paperclip className="w-3 h-3" />
-                  <span className="text-xs">{card.anexos}</span>
+                  <span className="text-xs">{typeof card.anexos === 'number' ? card.anexos : 0}</span>
                 </div>
               )}
             </div>

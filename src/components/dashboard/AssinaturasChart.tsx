@@ -27,7 +27,10 @@ export const AssinaturasChart = ({ data }: AssinaturasChartProps) => {
         <ResponsiveContainer width="100%" height={300}>
           <PieChart>
             <Pie
-              data={data}
+              data={data[0]?.datasets?.[0]?.data?.map((value: number, index: number) => ({
+                name: data[0]?.labels?.[index] || 'Item',
+                value: value
+              })) || []}
               cx="50%"
               cy="50%"
               innerRadius={60}
@@ -35,7 +38,7 @@ export const AssinaturasChart = ({ data }: AssinaturasChartProps) => {
               paddingAngle={5}
               dataKey="value"
             >
-              {data.map((entry, index) => (
+              {(data[0]?.datasets?.[0]?.data || []).map((_: any, index: number) => (
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>

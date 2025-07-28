@@ -107,8 +107,9 @@ export const CardEditActions = ({ card, onUpdate, onDelete }: CardEditActionsPro
   }
 
   const incrementarAnexos = () => {
+    const anexosCount = typeof card.anexos === 'number' ? card.anexos : 0
     onUpdate({
-      anexos: (card.anexos || 0) + 1
+      anexos: anexosCount + 1
     })
   }
 
@@ -301,7 +302,7 @@ export const CardEditActions = ({ card, onUpdate, onDelete }: CardEditActionsPro
             onClick={incrementarAnexos}
           >
             <Plus className="w-4 h-4 mr-2" />
-            Anexo ({card.anexos || 0})
+            Anexo ({typeof card.anexos === 'number' ? card.anexos : 0})
           </Button>
         </div>
       </div>

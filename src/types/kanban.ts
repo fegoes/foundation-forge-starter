@@ -7,14 +7,14 @@ export interface KanbanCard {
   descricao: string
   prioridade: "baixa" | "media" | "alta"
   tags: string[]
-  anexos: Anexo[]
+  anexos: number
   comentarios: Comentario[]
   atividades: Atividade[]
   servicos: ServicoItem[]
   stageId: number
   createdAt: string
   updatedAt: string
-  status?: string
+  status: string
   labels?: string[]
   membros?: string[]
   acaoId?: number
