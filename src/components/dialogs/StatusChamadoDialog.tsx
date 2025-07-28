@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast"
 interface StatusChamado {
   id: number
   nome: string
+  ordem: number
   cor: string
 }
 
@@ -16,6 +17,7 @@ interface StatusChamadoDialogProps {
   status?: StatusChamado
   onSave: (status: Omit<StatusChamado, 'id'> | StatusChamado) => void
   isEdit?: boolean
+  proximaOrdem?: number
 }
 
 const coresDisponiveis = [
@@ -29,10 +31,11 @@ const coresDisponiveis = [
   "#06b6d4", // cyan
 ]
 
-export function StatusChamadoDialog({ status, onSave, isEdit = false }: StatusChamadoDialogProps) {
+export function StatusChamadoDialog({ status, onSave, isEdit = false, proximaOrdem = 1 }: StatusChamadoDialogProps) {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
     nome: status?.nome || "",
+    ordem: status?.ordem || proximaOrdem,
     cor: status?.cor || "#ef4444"
   })
   const { toast } = useToast()
@@ -56,7 +59,7 @@ export function StatusChamadoDialog({ status, onSave, isEdit = false }: StatusCh
     }
     
     setOpen(false)
-    setFormData({ nome: "", cor: "#ef4444" })
+    setFormData({ nome: "", ordem: proximaOrdem, cor: "#ef4444" })
     
     toast({
       title: "Sucesso",
@@ -88,6 +91,17 @@ export function StatusChamadoDialog({ status, onSave, isEdit = false }: StatusCh
               value={formData.nome}
               onChange={(e) => setFormData({ ...formData, nome: e.target.value })}
               placeholder="Ex: Aberto, Em Andamento, Resolvido..."
+            />
+          </div>
+          <div>
+            <Label htmlFor="ordem">Ordem</Label>
+            <Input
+              id="ordem"
+              type="number"
+              min="1"
+              value={formData.ordem}
+              onChange={(e) => setFormData({ ...formData, ordem: parseInt(e.target.value) || 1 })}
+              placeholder="Ordem de exibição"
             />
           </div>
           <div>

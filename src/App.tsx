@@ -11,6 +11,7 @@ import AssinaturasIndex from "./pages/assinaturas/Index";
 import KanbanIndex from "./pages/kanban/Index";
 import ChamadosIndex from "./pages/chamados/Index";
 import ConfiguracoesIndex from "./pages/configuracoes/Index";
+import EstagiosPipeline from "./pages/configuracoes/EstagiosPipeline";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/kanban" element={<KanbanIndex />} />
             <Route path="/chamados" element={<ChamadosIndex />} />
             <Route path="/configuracoes" element={<ConfiguracoesIndex />} />
+            <Route path="/configuracoes/estagios-pipeline" element={<EstagiosPipeline />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

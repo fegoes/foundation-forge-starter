@@ -13,6 +13,8 @@ interface TipoProduto {
   id: number
   nome: string
   descricao: string
+  ordem: number
+  cor: string
 }
 
 interface Produto {
@@ -33,8 +35,8 @@ interface ProdutoDialogProps {
 export function ProdutoDialog({ produto, onSave, isEdit = false }: ProdutoDialogProps) {
   const [open, setOpen] = useState(false)
   const [tiposProdutos] = useLocalStorage<TipoProduto[]>("tiposProdutos", [
-    { id: 1, nome: "Software", descricao: "Sistemas e aplicações" },
-    { id: 2, nome: "Serviços", descricao: "Prestação de serviços" }
+    { id: 1, nome: "Software", descricao: "Sistemas e aplicações", ordem: 1, cor: "#3b82f6" },
+    { id: 2, nome: "Serviços", descricao: "Prestação de serviços", ordem: 2, cor: "#10b981" }
   ])
   
   const [formData, setFormData] = useState({

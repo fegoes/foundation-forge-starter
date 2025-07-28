@@ -11,19 +11,35 @@ interface TipoProduto {
   id: number
   nome: string
   descricao: string
+  ordem: number
+  cor: string
 }
 
 interface TipoProdutoDialogProps {
   tipo?: TipoProduto
   onSave: (tipo: Omit<TipoProduto, 'id'> | TipoProduto) => void
   isEdit?: boolean
+  proximaOrdem?: number
 }
 
-export function TipoProdutoDialog({ tipo, onSave, isEdit = false }: TipoProdutoDialogProps) {
+const coresDisponiveis = [
+  "#3b82f6", // blue
+  "#10b981", // emerald
+  "#f59e0b", // amber
+  "#8b5cf6", // violet
+  "#ef4444", // red
+  "#f97316", // orange
+  "#06b6d4", // cyan
+  "#6b7280", // gray
+]
+
+export function TipoProdutoDialog({ tipo, onSave, isEdit = false, proximaOrdem = 1 }: TipoProdutoDialogProps) {
   const [open, setOpen] = useState(false)
   const [formData, setFormData] = useState({
     nome: tipo?.nome || "",
-    descricao: tipo?.descricao || ""
+    descricao: tipo?.descricao || "",
+    ordem: tipo?.ordem || proximaOrdem,
+    cor: tipo?.cor || "#3b82f6"
   })
   const { toast } = useToast()
 
@@ -46,7 +62,7 @@ export function TipoProdutoDialog({ tipo, onSave, isEdit = false }: TipoProdutoD
     }
     
     setOpen(false)
-    setFormData({ nome: "", descricao: "" })
+    setFormData({ nome: "", descricao: "", ordem: proximaOrdem, cor: "#3b82f6" })
     
     toast({
       title: "Sucesso",
@@ -88,6 +104,33 @@ export function TipoProdutoDialog({ tipo, onSave, isEdit = false }: TipoProdutoD
               onChange={(e) => setFormData({ ...formData, descricao: e.target.value })}
               placeholder="Descrição do tipo de produto ou serviço"
             />
+          </div>
+          <div>
+            <Label htmlFor="ordem">Ordem</Label>
+            <Input
+              id="ordem"
+              type="number"
+              min="1"
+              value={formData.ordem}
+              onChange={(e) => setFormData({ ...formData, ordem: parseInt(e.target.value) || 1 })}
+              placeholder="Ordem de exibição"
+            />
+          </div>
+          <div>
+            <Label htmlFor="cor">Cor</Label>
+            <div className="flex gap-2 flex-wrap mt-2">
+              {coresDisponiveis.map((cor) => (
+                <button
+                  key={cor}
+                  type="button"
+                  className={`w-8 h-8 rounded-full border-2 ${
+                    formData.cor === cor ? 'border-foreground' : 'border-gray-300'
+                  }`}
+                  style={{ backgroundColor: cor }}
+                  onClick={() => setFormData({ ...formData, cor })}
+                />
+              ))}
+            </div>
           </div>
           <div className="flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>

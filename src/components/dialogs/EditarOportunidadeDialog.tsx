@@ -35,6 +35,7 @@ import { Edit, Plus, X, User, ShoppingCart } from "lucide-react"
 import { ClienteSelector } from "./ClienteSelector"
 import { useLocalStorage } from "@/hooks/useLocalStorage"
 import { useToast } from "@/hooks/use-toast"
+import type { AcaoCard } from "@/types/kanban"
 
 const formSchema = z.object({
   cliente: z.string().min(1, "Cliente é obrigatório"),
@@ -42,6 +43,7 @@ const formSchema = z.object({
   valor: z.string().min(1, "Valor é obrigatório"),
   status: z.string().min(1, "Status é obrigatório"),
   estagio: z.string().min(1, "Estágio é obrigatório"),
+  acao: z.string().optional(),
 })
 
 interface Produto {
@@ -69,6 +71,7 @@ interface KanbanCard {
   status: string
   clienteId?: number
   servicos?: ServicoItem[]
+  acaoId?: number
 }
 
 interface Stage {
@@ -103,6 +106,7 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
   })
   
   const [produtos] = useLocalStorage<Produto[]>("produtos", [])
+  const [acoesCards] = useLocalStorage<AcaoCard[]>("acoesCards", [])
   const { toast } = useToast()
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -113,6 +117,7 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
       valor: card.valor.toString(),
       status: card.status,
       estagio: "",
+      acao: card.acaoId?.toString() || "",
     },
   })
 
@@ -157,6 +162,7 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
       status: values.status,
       clienteId: selectedClienteId,
       servicos: servicos,
+      acaoId: values.acao ? parseInt(values.acao) : undefined,
     })
     
     setOpen(false)
@@ -418,6 +424,65 @@ export function EditarOportunidadeDialog({ card, stages, onUpdate, trigger }: Ed
                               </div>
                             </SelectItem>
                           ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  Ação Atual
+                  {acoesCards.length === 0 && (
+                    <Badge variant="outline" className="text-xs">
+                      Cadastre ações em Configurações
+                    </Badge>
+                  )}
+                </CardTitle>
+                <CardDescription>
+                  {acoesCards.length > 0 
+                    ? "Selecione a ação atual da oportunidade (opcional)"
+                    : "Para usar ações, cadastre-as primeiro em Configurações → Ações dos Cards"
+                  }
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FormField
+                  control={form.control}
+                  name="acao"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ação</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Selecione uma ação" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {acoesCards.length > 0 ? (
+                            acoesCards
+                              .sort((a, b) => a.ordem - b.ordem)
+                              .map((acao) => (
+                              <SelectItem key={acao.id} value={acao.id.toString()}>
+                                <div className="flex items-center gap-2">
+                                  <div 
+                                    className="w-3 h-3 rounded-full"
+                                    style={{ backgroundColor: acao.cor }}
+                                  />
+                                  {acao.nome}
+                                </div>
+                              </SelectItem>
+                            ))
+                          ) : (
+                            <SelectItem disabled value="no-actions">
+                              <span className="text-muted-foreground">Nenhuma ação cadastrada</span>
+                            </SelectItem>
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage />
